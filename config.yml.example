@@ -1,0 +1,4 @@
+# mrubyをgit cloneしたディレクトリ
+:mruby_path: ~/work/mrubyc_test/mruby/
+# mrubycをgit cloneしたディレクトリ
+:mrubyc_path: ~/work/mrubyc_test/mrubyc/
