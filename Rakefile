@@ -14,23 +14,39 @@ end
 
 $conf = Conf.new("config.yml")
 
+# 
+# basictest
+#
+
 file "test/basictest.mrb" => "test/basictest.rb" do
   sh "#{$conf.mrbc} -E test/basictest.rb"
 end
 
 desc "run basictest"
 task "basictest" => "test/basictest.mrb" do
-  sh "#{$conf.mrubyc} test/basictest.mrb"
+  sh "#{$conf.mrubyc} test/basictest.mrb | tee report/basictest.txt"
 end
+
+#
+# bootstraptest
+#
 
 desc "run bootstraptest"
 task "bootstraptest" do
   # TBA
 end
 
+#
+# mrubytest
+#
+
+file "test/mrubytest.mrb" => "test/mrubytest.rb" do
+  sh "#{$conf.mrbc} -E test/mrubytest.rb"
+end
+
 desc "run mrubytest"
-task "mrubytest" do
-  # TBA
+task "mrubytest" => "test/mrubytest.mrb" do
+  sh "#{$conf.mrubyc} test/mrubytest.mrb | tee report/mrubytest.txt"
 end
 
 task default: ["basictest", "bootstraptest", "mrubytest"]
