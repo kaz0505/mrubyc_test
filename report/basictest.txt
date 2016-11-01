@@ -1,7 +1,0 @@
-assignment
-ok 1
-no method(==)!
-not ok assignment 2
-ERROR ==
-not ok assignment 3
-ok 4

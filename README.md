@@ -23,3 +23,7 @@
     $ rake basictest
     $ rake bootstraptest
     $ rake mrubytest
+
+## テストについて
+
+TESTS.mdを参照してください。

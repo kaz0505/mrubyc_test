@@ -1,4 +1,5 @@
 require 'yaml'
+require 'tempfile'
 
 class Conf
   def initialize(path)
@@ -14,18 +15,42 @@ end
 
 $conf = Conf.new("config.yml")
 
+rule ".mrb" => ".rb" do |t|
+  sh "#{$conf.mrbc} -E '#{t.source}'"
+end
+
 # 
 # basictest
 #
 
-file "test/basictest.mrb" => "test/basictest.rb" do
-  sh "#{$conf.mrbc} -E test/basictest.rb"
+BASIC_HEADER = File.read("test/basictest/header.rb")
+BASIC_RBS = Dir["test/basictest/test_*.rb"]
+BASIC_MRBS = BASIC_RBS.map{|s| s.sub(".rb", ".mrb")}
+BASIC_OUTS = BASIC_RBS.map{|s| s.sub(".rb", ".out")}
+BASIC_REPORT = "report/basictest.html"
+
+BASIC_RBS.zip(BASIC_MRBS, BASIC_OUTS).each do |rb_path, mrb_path, out_path|
+  file mrb_path => rb_path do
+    f = Tempfile.new(File.basename(rb_path))
+    f.write(BASIC_HEADER + File.read(rb_path))
+    f.close
+    sh "#{$conf.mrbc} -E -o #{mrb_path} #{f.path}"
+  end
+
+  file out_path => mrb_path do
+    cmd = "#{$conf.mrubyc} #{mrb_path} > #{out_path} 2>&1"
+    puts cmd
+    p system cmd
+    puts File.read(out_path)
+  end
+end
+
+file BASIC_REPORT => [*BASIC_OUTS, "test/basictest/basic_report.html.erb"] do
+  sh "ruby test/basictest/make_report.rb > #{BASIC_REPORT}"
 end
 
 desc "run basictest"
-task "basictest" => "test/basictest.mrb" do
-  sh "#{$conf.mrubyc} test/basictest.mrb | tee report/basictest.txt"
-end
+task "basictest" => BASIC_REPORT
 
 #
 # bootstraptest

@@ -1,0 +1,19 @@
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>mruby/c basictest report</title>
+</head>
+<body>
+
+  <% OUTS.each do |out_path| %>
+    <% rb_path = out_path.sub(".out", ".rb") %>
+    <div>
+      <h2><%=h File.basename(out_path) %></h2>
+      <pre style='float: left; width: 50%'><%=h File.read(rb_path) %></pre>
+      <pre><%=h File.read(out_path) %></pre>
+      <br style='clear:both'>
+    </div>
+  <% end %>
+
+</body>
+</html>
