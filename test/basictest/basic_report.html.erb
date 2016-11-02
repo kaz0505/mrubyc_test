@@ -5,12 +5,11 @@
 </head>
 <body>
 
-  <% OUTS.each do |out_path| %>
-    <% rb_path = out_path.sub(".out", ".rb") %>
+  <% $tests.each do |test| %>
     <div>
-      <h2><%=h File.basename(out_path) %></h2>
-      <pre style='float: left; width: 50%'><%=h File.read(rb_path) %></pre>
-      <pre><%=h File.read(out_path) %></pre>
+      <h2><%=h File.basename(test.out_path) %></h2>
+      <pre style='float: left; width: 50%'><%=h test.rb_txt %></pre>
+      <pre><%=h test.out_txt %></pre>
       <br style='clear:both'>
     </div>
   <% end %>

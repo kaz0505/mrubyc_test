@@ -52,7 +52,9 @@ BASIC_RBS.zip(BASIC_MRBS, BASIC_OUTS).each do |rb_path, mrb_path, out_path|
   end
 end
 
-file BASIC_REPORT => [*BASIC_OUTS, "test/basictest/basic_report.html.erb"] do
+file BASIC_REPORT => [*BASIC_OUTS,
+                      "test/basictest/make_report.rb",
+                      "test/basictest/basic_report.html.erb"] do
   sh "ruby test/basictest/make_report.rb > #{BASIC_REPORT}"
 end
 
