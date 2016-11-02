@@ -41,6 +41,13 @@ BASIC_RBS.zip(BASIC_MRBS, BASIC_OUTS).each do |rb_path, mrb_path, out_path|
     cmd = "#{$conf.mrubyc} #{mrb_path} > #{out_path} 2>&1"
     puts cmd
     p system cmd
+    if $?.exitstatus == 139
+      if File.exist?("core")
+        sh "gdb -batch -c core -ex bt >> #{out_path}"
+      else
+        puts "Detected SEGV but core file not found"
+      end
+    end
     puts File.read(out_path)
   end
 end

@@ -21,6 +21,13 @@
 
     setvbuf(stdout, NULL, _IONBF, 0);
 
+### coreを生成するよう設定(オプショナル)
+
+OSの設定でSEGV時のcoreファイル生成を有効にすると(以下は例)、
+テストレポートにバックトレースが含まれるようになります。
+
+    $ ulimit -c unlimited
+
 ### テストの実行
 
     $ rake
