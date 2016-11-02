@@ -11,7 +11,7 @@ class Test < Struct.new(:rb_path, :title, :rb_txt, :out)
 end
 
 tests = Hash.new{|h, k| h[k] = []}
-Dir["#{mruby_path}/test/t/*.rb"].each do |rb_path|
+Dir["#{__dir__}/test_*.rb"].each do |rb_path|
   category = File.basename(rb_path, ".rb")
   next if category =~ /(exception|superclass|module)\z/
   next if category =~ /(string)\z/
