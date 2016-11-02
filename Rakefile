@@ -56,9 +56,9 @@ BASIC_RBS.zip(BASIC_MRBS, BASIC_OUTS).each do |rb_path, mrb_path, out_path|
 end
 
 file BASIC_REPORT => [*BASIC_OUTS,
-                      "test/basictest/make_report.rb",
-                      "test/basictest/basic_report.html.erb"] do
-  sh "ruby test/basictest/make_report.rb > #{BASIC_REPORT}"
+                      "test/make_report.rb",
+                      "test/test_report.html.erb"] do
+  sh "ruby test/make_report.rb test/basictest/ > #{BASIC_REPORT}"
 end
 
 desc "run basictest"
@@ -68,10 +68,44 @@ task "basictest" => BASIC_REPORT
 # bootstraptest
 #
 
-desc "run bootstraptest"
-task "bootstraptest" do
-  # TBA
+BOOTSTRAP_HEADER = File.read("test/bootstraptest/header.rb")
+BOOTSTRAP_RBS = Dir["test/bootstraptest/test_*.rb"]
+BOOTSTRAP_MRBS = BOOTSTRAP_RBS.map{|s| s.sub(".rb", ".mrb")}
+BOOTSTRAP_OUTS = BOOTSTRAP_RBS.map{|s| s.sub(".rb", ".out")}
+BOOTSTRAP_REPORT = "report/bootstraptest.html"
+
+BOOTSTRAP_RBS.zip(BOOTSTRAP_MRBS, BOOTSTRAP_OUTS).each do |rb_path, mrb_path, out_path|
+  file mrb_path => rb_path do
+    f = Tempfile.new(File.basename(rb_path))
+    f.write(BOOTSTRAP_HEADER + File.read(rb_path))
+    f.close
+    sh "#{$conf.mrbc} -E -o #{mrb_path} #{f.path}"
+  end
+
+  file out_path => mrb_path do
+    cmd = "#{$conf.mrubyc} #{mrb_path} > #{out_path} 2>&1"
+    puts cmd
+    p system cmd
+    if $?.exitstatus == 139
+      if File.exist?("core")
+        sh "gdb -batch -c core -ex bt >> #{out_path}"
+      else
+        puts "Detected SEGV but core file not found"
+      end
+    end
+    puts File.read(out_path)
+  end
 end
+
+file BOOTSTRAP_REPORT => [*BOOTSTRAP_OUTS,
+                          "test/make_report.rb",
+                          "test/test_report.html.erb"] do
+  sh "ruby test/make_report.rb test/bootstraptest/ > #{BOOTSTRAP_REPORT}"
+end
+
+
+desc "run bootstraptest"
+task "bootstraptest" => BOOTSTRAP_REPORT
 
 #
 # mrubytest

@@ -1,6 +1,11 @@
 require 'cgi'
 require 'erb'
 
+if ARGV.size < 1
+  raise "usage: #$0 TESTS_DIR"
+end
+tests_dir = ARGV[0]
+
 def h(str); CGI.escapeHTML(str); end
 
 class Test
@@ -19,8 +24,8 @@ class Test
   end
 end
 
-$tests = Dir["#{__dir__}/test_*.rb"]
+$tests = Dir["#{tests_dir}/test_*.rb"]
   .map{|x| Test.new(x)}
   .sort_by{|x| x.rb_txt.length}
-erb = ERB.new(File.read("#{__dir__}/basic_report.html.erb"))
+erb = ERB.new(File.read("#{__dir__}/test_report.html.erb"))
 puts erb.run(binding)
