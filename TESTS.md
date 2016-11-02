@@ -2,7 +2,7 @@
 
 ## basictest
 
-crubyのbasictest/test.rbを移植したものです。
+[CRuby](https://github.com/ruby/ruby/tree/13e474f035aa7cc2ee8a1da177137d05eeec5e3b)のbasictest/test.rbを移植したものです。
 
 以下の機能はmruby/cではサポートされないものと仮定し、移植を
 スキップしています。
