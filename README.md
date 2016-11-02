@@ -14,6 +14,13 @@
     $ cp config.yml.example config.yml
     $ vi config.yml (mrubyとmrubycのパスを設定)
 
+### stdoutのバッファリングをオフにする(オプショナル)
+
+デフォルトのmruby/cだとテスト中にSEGVした場合にstdoutへの出力が
+行われないため、sample_c/main.cに以下の1行を足すことを推奨します。
+
+    setvbuf(stdout, NULL, _IONBF, 0);
+
 ### テストの実行
 
     $ rake
