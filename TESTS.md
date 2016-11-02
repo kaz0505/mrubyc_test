@@ -13,6 +13,7 @@
   - `trace_var`
   - `defined?`
   - `alias`
+  - GC
 - ライブラリ
   - Kernel#eval
   - Object#clone
@@ -22,3 +23,25 @@
   - Marshal
   - Struct
   - File(basename等)
+
+## bootstraptest
+
+CRuby(git hashはbasictestと同一)のbootstraptest/test\_\*.rbを
+移植したものです。
+
+以下の機能はmruby/cではサポートされないものと仮定し、移植を
+スキップしています。
+
+- 言語機能
+  - autoload
+  - eval
+  - flipflop演算子
+  - 例外
+  - GC
+  - Thread
+  - finalizer
+- ライブラリ
+  - fork
+  - Marshal
+  - ObjectSpace
+  - Struct
