@@ -1,2 +1,0 @@
-ok: Array#length
-ok: Array#size

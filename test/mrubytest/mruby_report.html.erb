@@ -1,0 +1,22 @@
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>mruby/c mrubytest report</title>
+</head>
+<body>
+
+  <% $tests.each do |category, tests| %>
+    <h2><%=h category %></h2>
+    <% tests.each do |test| %>
+      <div>
+        <h3><%=h test['title'] %></h3>
+        <pre style='float: left; width: 50%'><%=h test['rb_txt'] %></pre>
+        <pre style='float: left; width: 50%'><%=h test['out'] %></pre>
+        <br style='clear:both'>
+      </div>
+    <% end %>
+  <% end %>
+
+</body>
+</html>
+

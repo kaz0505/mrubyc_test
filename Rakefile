@@ -7,7 +7,10 @@ class Conf
   end
 
   def mruby_path; File.expand_path(@yaml[:mruby_path]); end
-  def mrubyc_path; File.expand_path(@yaml[:mrubyc_path]); end
+  def mrubyc_path
+    ENV["ENGINE"] or
+    File.expand_path(@yaml[:mrubyc_path])
+  end
 
   def mrbc; File.join(mruby_path, "bin/mrbc"); end
   def mrubyc; File.join(mrubyc_path, "sample_c/mrubyc"); end
@@ -74,13 +77,20 @@ end
 # mrubytest
 #
 
-file "test/mrubytest.mrb" => "test/mrubytest.rb" do
-  sh "#{$conf.mrbc} -E test/mrubytest.rb"
+MRUBY_OUT = "test/mrubytest/mrubytest.json"
+MRUBY_REPORT = "report/mrubytest.html"
+
+file MRUBY_OUT => "test/mrubytest/runner.rb" do
+  sh "ruby test/mrubytest/runner.rb #{$conf.mruby_path} #{$conf.mrubyc_path} > #{MRUBY_OUT}"
+end
+
+file MRUBY_REPORT => [MRUBY_OUT,
+                      "test/mrubytest/make_report.rb", 
+                      "test/mrubytest/mruby_report.html.erb"] do
+  sh "ruby test/mrubytest/make_report.rb > #{MRUBY_REPORT}"
 end
 
 desc "run mrubytest"
-task "mrubytest" => "test/mrubytest.mrb" do
-  sh "#{$conf.mrubyc} test/mrubytest.mrb | tee report/mrubytest.txt"
-end
+task "mrubytest" => MRUBY_REPORT
 
 task default: ["basictest", "bootstraptest", "mrubytest"]
