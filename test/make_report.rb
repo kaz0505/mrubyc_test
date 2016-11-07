@@ -6,7 +6,7 @@ if ARGV.size < 1
 end
 tests_dir = ARGV[0]
 
-def h(str); CGI.escapeHTML(str); end
+def h(x); CGI.escapeHTML(x.to_s); end
 
 class Test
   def initialize(rb_path)
