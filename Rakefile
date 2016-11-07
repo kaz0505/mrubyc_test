@@ -16,6 +16,32 @@ class Conf
   def mrubyc; File.join(mrubyc_path, "sample_c/mrubyc"); end
 end
 
+module Test
+  extend FileUtils
+
+  def self.compile(rb_path, mrb_path)
+    f = Tempfile.new(File.basename(rb_path))
+    f.write(BASIC_HEADER + File.read(rb_path))
+    f.close
+    sh "#{$conf.mrbc} -E -o #{mrb_path} #{f.path}"
+  end
+
+  def self.run(mrb_path, out_path)
+    cmd = "#{$conf.mrubyc} #{mrb_path} > #{out_path} 2>&1"
+    puts cmd
+    p system cmd
+    if $?.exitstatus == 139
+      if File.exist?("core")
+        sh "gdb -batch -c core -ex bt >> #{out_path}"
+      else
+        puts "Detected SEGV but core file not found"
+      end
+    end
+    puts File.read(out_path)
+  end
+end
+
+
 $conf = Conf.new("config.yml")
 
 rule ".mrb" => ".rb" do |t|
@@ -34,24 +60,11 @@ BASIC_REPORT = "report/basictest.html"
 
 BASIC_RBS.zip(BASIC_MRBS, BASIC_OUTS).each do |rb_path, mrb_path, out_path|
   file mrb_path => rb_path do
-    f = Tempfile.new(File.basename(rb_path))
-    f.write(BASIC_HEADER + File.read(rb_path))
-    f.close
-    sh "#{$conf.mrbc} -E -o #{mrb_path} #{f.path}"
+    Test.compile(rb_path, mrb_path)
   end
 
   file out_path => mrb_path do
-    cmd = "#{$conf.mrubyc} #{mrb_path} > #{out_path} 2>&1"
-    puts cmd
-    p system cmd
-    if $?.exitstatus == 139
-      if File.exist?("core")
-        sh "gdb -batch -c core -ex bt >> #{out_path}"
-      else
-        puts "Detected SEGV but core file not found"
-      end
-    end
-    puts File.read(out_path)
+    Test.run(mrb_path, out_path)
   end
 end
 
@@ -76,24 +89,11 @@ BOOTSTRAP_REPORT = "report/bootstraptest.html"
 
 BOOTSTRAP_RBS.zip(BOOTSTRAP_MRBS, BOOTSTRAP_OUTS).each do |rb_path, mrb_path, out_path|
   file mrb_path => rb_path do
-    f = Tempfile.new(File.basename(rb_path))
-    f.write(BOOTSTRAP_HEADER + File.read(rb_path))
-    f.close
-    sh "#{$conf.mrbc} -E -o #{mrb_path} #{f.path}"
+    Test.compile(rb_path, mrb_path)
   end
 
   file out_path => mrb_path do
-    cmd = "#{$conf.mrubyc} #{mrb_path} > #{out_path} 2>&1"
-    puts cmd
-    p system cmd
-    if $?.exitstatus == 139
-      if File.exist?("core")
-        sh "gdb -batch -c core -ex bt >> #{out_path}"
-      else
-        puts "Detected SEGV but core file not found"
-      end
-    end
-    puts File.read(out_path)
+    Test.run(mrb_path, out_path)
   end
 end
 
