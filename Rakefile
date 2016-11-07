@@ -1,3 +1,4 @@
+require 'json'
 require 'yaml'
 require 'tempfile'
 
@@ -26,18 +27,24 @@ module Test
     sh "#{$conf.mrbc} -E -o #{mrb_path} #{f.path}"
   end
 
-  def self.run(mrb_path, out_path)
-    cmd = "#{$conf.mrubyc} #{mrb_path} > #{out_path} 2>&1"
+  def self.run(rb_path, mrb_path, res_path)
+    cmd = "#{$conf.mrubyc} #{mrb_path} 2>&1"
     puts cmd
-    p system cmd
+    out = `#{cmd}`
     if $?.exitstatus == 139
       if File.exist?("core")
-        sh "gdb -batch -c core -ex bt >> #{out_path}"
+        out << `gdb -batch -c core -ex bt`
       else
         puts "Detected SEGV but core file not found"
       end
     end
-    puts File.read(out_path)
+    data = {
+      rb_path: rb_path,
+      title: File.basename(rb_path),
+      rb_txt: File.read(rb_path),
+      out: out,
+    }
+    File.write(res_path, data.to_json)
   end
 end
 
@@ -55,20 +62,20 @@ end
 BASIC_HEADER = File.read("test/basictest/header.rb")
 BASIC_RBS = Dir["test/basictest/test_*.rb"]
 BASIC_MRBS = BASIC_RBS.map{|s| s.sub(".rb", ".mrb")}
-BASIC_OUTS = BASIC_RBS.map{|s| s.sub(".rb", ".out")}
+BASIC_RESULTS = BASIC_RBS.map{|s| s.sub(".rb", ".res")}
 BASIC_REPORT = "report/basictest.html"
 
-BASIC_RBS.zip(BASIC_MRBS, BASIC_OUTS).each do |rb_path, mrb_path, out_path|
+BASIC_RBS.zip(BASIC_MRBS, BASIC_RESULTS).each do |rb_path, mrb_path, res_path|
   file mrb_path => rb_path do
     Test.compile(rb_path, mrb_path)
   end
 
-  file out_path => mrb_path do
-    Test.run(mrb_path, out_path)
+  file res_path => mrb_path do
+    Test.run(rb_path, mrb_path, res_path)
   end
 end
 
-file BASIC_REPORT => [*BASIC_OUTS,
+file BASIC_REPORT => [*BASIC_RESULTS,
                       "test/make_report.rb",
                       "test/test_report.html.erb"] do
   sh "ruby test/make_report.rb test/basictest/ > #{BASIC_REPORT}"
@@ -84,20 +91,20 @@ task "basictest" => BASIC_REPORT
 BOOTSTRAP_HEADER = File.read("test/bootstraptest/header.rb")
 BOOTSTRAP_RBS = Dir["test/bootstraptest/test_*.rb"]
 BOOTSTRAP_MRBS = BOOTSTRAP_RBS.map{|s| s.sub(".rb", ".mrb")}
-BOOTSTRAP_OUTS = BOOTSTRAP_RBS.map{|s| s.sub(".rb", ".out")}
+BOOTSTRAP_RESULTS = BOOTSTRAP_RBS.map{|s| s.sub(".rb", ".res")}
 BOOTSTRAP_REPORT = "report/bootstraptest.html"
 
-BOOTSTRAP_RBS.zip(BOOTSTRAP_MRBS, BOOTSTRAP_OUTS).each do |rb_path, mrb_path, out_path|
+BOOTSTRAP_RBS.zip(BOOTSTRAP_MRBS, BOOTSTRAP_RESULTS).each do |rb_path, mrb_path, res_path|
   file mrb_path => rb_path do
     Test.compile(rb_path, mrb_path)
   end
 
-  file out_path => mrb_path do
-    Test.run(mrb_path, out_path)
+  file res_path => mrb_path do
+    Test.run(rb_path, mrb_path, res_path)
   end
 end
 
-file BOOTSTRAP_REPORT => [*BOOTSTRAP_OUTS,
+file BOOTSTRAP_REPORT => [*BOOTSTRAP_RESULTS,
                           "test/make_report.rb",
                           "test/test_report.html.erb"] do
   sh "ruby test/make_report.rb test/bootstraptest/ > #{BOOTSTRAP_REPORT}"

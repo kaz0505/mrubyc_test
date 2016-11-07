@@ -1,4 +1,5 @@
 *.mrb
 *.out
+*.res
 /config.yml
 /test/mrubytest/mrubytest.json

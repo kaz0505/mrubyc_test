@@ -19,11 +19,11 @@
   <% $tests.each.with_index do |test, i| %>
     <div>
       <h2 class='test-title' data-idx='<%=h i %>'>
-        <%=h File.basename(test.out_path) %>
+        <%=h test['title'] %>
       </h2>
       <div class='test-detail' data-idx='<%=h i %>'>
-        <pre class='rb_txt'><%=h test.rb_txt %></pre>
-        <pre class='out_txt'><%=h test.out_txt %></pre>
+        <pre class='rb_txt'><%=h test['rb_txt'] %></pre>
+        <pre class='out_txt'><%=h test['out'] %></pre>
         <br style='clear:both'>
       </div>
     </div>
