@@ -20,9 +20,9 @@ end
 module Test
   extend FileUtils
 
-  def self.compile(rb_path, mrb_path)
+  def self.compile(header, rb_path, mrb_path)
     f = Tempfile.new(File.basename(rb_path))
-    f.write(BASIC_HEADER + File.read(rb_path))
+    f.write(header + File.read(rb_path))
     f.close
     sh "#{$conf.mrbc} -E -o #{mrb_path} #{f.path}"
   end
@@ -67,7 +67,7 @@ BASIC_REPORT = "report/basictest.html"
 
 BASIC_RBS.zip(BASIC_MRBS, BASIC_RESULTS).each do |rb_path, mrb_path, res_path|
   file mrb_path => rb_path do
-    Test.compile(rb_path, mrb_path)
+    Test.compile(BASIC_HEADER, rb_path, mrb_path)
   end
 
   file res_path => mrb_path do
@@ -96,7 +96,7 @@ BOOTSTRAP_REPORT = "report/bootstraptest.html"
 
 BOOTSTRAP_RBS.zip(BOOTSTRAP_MRBS, BOOTSTRAP_RESULTS).each do |rb_path, mrb_path, res_path|
   file mrb_path => rb_path do
-    Test.compile(rb_path, mrb_path)
+    Test.compile(BOOTSTRAP_HEADER, rb_path, mrb_path)
   end
 
   file res_path => mrb_path do
