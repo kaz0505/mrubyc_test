@@ -118,14 +118,17 @@ task "bootstraptest" => BOOTSTRAP_REPORT
 # mrubytest
 #
 
-MRUBY_OUT = "test/mrubytest/mrubytest.json"
+MRUBY_RBS = Dir["test/mrubytest/test_*.rb"]
+MRUBY_RESULTS = MRUBY_RBS.map{|s| s.sub(".rb", ".res")}
 MRUBY_REPORT = "report/mrubytest.html"
 
-file MRUBY_OUT => "test/mrubytest/runner.rb" do
-  sh "ruby test/mrubytest/runner.rb #{$conf.mruby_path} #{$conf.mrubyc_path} > #{MRUBY_OUT}"
+MRUBY_RBS.zip(MRUBY_RESULTS).each do |rb_path, res_path|
+  file res_path => rb_path do
+    sh "ruby test/mrubytest/runner.rb #{rb_path} #{$conf.mruby_path} #{$conf.mrubyc_path} > #{res_path}"
+  end
 end
 
-file MRUBY_REPORT => [MRUBY_OUT,
+file MRUBY_REPORT => [*MRUBY_RESULTS,
                       "test/mrubytest/make_report.rb", 
                       "test/mrubytest/mruby_report.html.erb"] do
   sh "ruby test/mrubytest/make_report.rb > #{MRUBY_REPORT}"

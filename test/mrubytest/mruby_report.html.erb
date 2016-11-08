@@ -5,13 +5,13 @@
 </head>
 <body>
 
-  <% $tests.each do |category, tests| %>
-    <h2><%=h category %></h2>
-    <% tests.each do |test| %>
+  <% $tests.each do |test| %>
+    <h2><%=h test['category'] %></h2>
+    <% test['cases'].each do |t| %>
       <div>
-        <h3><%=h test['title'] %></h3>
-        <pre style='float: left; width: 50%'><%=h test['rb_txt'] %></pre>
-        <pre style='float: left; width: 50%'><%=h test['out'] %></pre>
+        <h3><%=h t['title'] %></h3>
+        <pre style='float: left; width: 50%'><%=h t['rb_txt'] %></pre>
+        <pre style='float: left; width: 50%'><%=h t['out'] %></pre>
         <br style='clear:both'>
       </div>
     <% end %>
