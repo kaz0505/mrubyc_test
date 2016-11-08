@@ -132,9 +132,9 @@ MRUBY_RBS.zip(MRUBY_RESULTS).each do |rb_path, res_path|
 end
 
 file MRUBY_REPORT => [*MRUBY_RESULTS,
-                      "test/mrubytest/make_report.rb", 
-                      "test/mrubytest/mruby_report.html.erb"] do
-  sh "ruby test/mrubytest/make_report.rb > #{MRUBY_REPORT}"
+                      "test/make_report.rb", 
+                      "test/test_report.html.erb"] do
+  sh "ruby test/make_report.rb test/mrubytest > #{MRUBY_REPORT}"
 end
 
 desc "run mrubytest"
