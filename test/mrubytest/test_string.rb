@@ -2,8 +2,6 @@
 ##
 # String ISO Test
 
-UTF8STRING = ("\343\201\202".size == 1)
-
 assert('String', '15.2.10') do
   assert_equal Class, String.class
 end
@@ -88,7 +86,7 @@ assert('String#[](UTF-8)', '15.2.10.5.6') do
   assert_equal "世界", "こんにちは世界"[-2..-1]
   assert_equal "んに", "こんにちは世界"[1,2]
   assert_equal "世", "こんにちは世界"["世"]
-end if UTF8STRING
+end
 
 assert('String#[] with Range') do
   a1 = 'abc'[1..0]
@@ -271,7 +269,7 @@ assert('String#chop(UTF-8)', '15.2.10.5.11') do
   assert_equal '', a
   assert_equal 'あい', b
   assert_equal 'あ', c
-end if UTF8STRING
+end
 
 assert('String#chop!', '15.2.10.5.12') do
   a = ''
@@ -297,7 +295,7 @@ assert('String#chop!(UTF-8)', '15.2.10.5.12') do
   assert_equal a, ''
   assert_equal b, 'あいうえ'
   assert_equal c, 'あいう'
-end if UTF8STRING
+end
 
 assert('String#downcase', '15.2.10.5.13') do
   a = 'ABC'.downcase
@@ -455,7 +453,7 @@ assert('String#reverse(UTF-8)', '15.2.10.5.29') do
   assert_equal "世界", "こんにちは世界"[-2..-1]
   assert_equal "んに", "こんにちは世界"[1,2]
   assert_equal "世", "こんにちは世界"["世"]
-end if UTF8STRING
+end
 
 assert('String#reverse!', '15.2.10.5.30') do
   a = 'abc'
@@ -471,7 +469,7 @@ assert('String#reverse!(UTF-8)', '15.2.10.5.30') do
 
   assert_equal '!界世はちにんこ', a
   assert_equal '!界世はちにんこ', 'こんにちは世界!'.reverse!
-end if UTF8STRING
+end
 
 assert('String#rindex', '15.2.10.5.31') do
   assert_equal 0, 'abc'.rindex('a')
@@ -486,7 +484,7 @@ assert('String#rindex(UTF-8)', '15.2.10.5.31') do
   assert_equal 3, str.index('ち')
   assert_equal 12, str.index('ち', 10)
   assert_equal nil, str.index("さ")
-end if UTF8STRING
+end
 
 # 'String#scan', '15.2.10.5.32' will be tested in mrbgems.
 
@@ -499,7 +497,7 @@ assert('String#size(UTF-8)', '15.2.10.5.33') do
   assert_equal 8, str.size
   assert_not_equal str.bytesize, str.size
   assert_equal 2, str[1, 2].size
-end if UTF8STRING
+end
 
 assert('String#slice', '15.2.10.5.34') do
   # length of args is 1
@@ -553,7 +551,7 @@ assert('String#split(UTF-8)', '15.2.10.5.35') do
   assert_equal ['こ', 'ん', 'に', 'ち', 'は', '世', '界', '!'], got
   got = "こんにちは世界!".split('に')
   assert_equal ['こん', 'ちは世界!'], got
-end if UTF8STRING
+end
 
 assert('String#sub', '15.2.10.5.36') do
   assert_equal 'aBcabc', 'abcabc'.sub('b', 'B')
