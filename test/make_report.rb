@@ -22,6 +22,5 @@ end
 
 $tests = Dir["#{tests_dir}/test_*.rb"]
   .map{|x| Test.new(x.sub(/\.rb\z/, ".res"))}
-  .sort_by{|x| x['rb_txt'].length}
 erb = ERB.new(File.read("#{__dir__}/test_report.html.erb"))
 puts erb.run(binding)

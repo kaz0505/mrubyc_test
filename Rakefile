@@ -40,9 +40,12 @@ module Test
     end
     data = {
       rb_path: rb_path,
-      title: File.basename(rb_path),
-      rb_txt: File.read(rb_path),
-      out: out,
+      category: File.basename(rb_path),
+      cases: [
+        {title: nil,
+         rb_txt: File.read(rb_path),
+         out: out}
+      ]
     }
     File.write(res_path, data.to_json)
   end

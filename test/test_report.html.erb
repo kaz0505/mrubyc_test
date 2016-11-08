@@ -4,8 +4,8 @@
   <title>mruby/c test report</title>
   <script type='text/javascript' src='jquery-3.1.1.min.js'></script>
   <style>
-    h2.test-title { text-decoration: underline; }
-    h2.test-title:hover { cursor: pointer; }
+    h2.test-category { text-decoration: underline; }
+    h2.test-category:hover { cursor: pointer; }
     pre.rb_txt, pre.out_txt {
       float: left;
       width: 50%;
@@ -18,20 +18,25 @@
 
   <% $tests.each.with_index do |test, i| %>
     <div>
-      <h2 class='test-title' data-idx='<%=h i %>'>
-        <%=h test['title'] %>
+      <h2 class='test-category' data-idx='<%=h i %>'>
+        <%=h test['category'] %>
       </h2>
       <div class='test-detail' data-idx='<%=h i %>'>
-        <pre class='rb_txt'><%=h test['rb_txt'] %></pre>
-        <pre class='out_txt'><%=h test['out'] %></pre>
-        <br style='clear:both'>
+        <% test['cases'].each do |t| %>
+          <% if t['title'] %>
+            <h3><%=h t['title'] %></h3>
+          <% end %>
+          <pre class='rb_txt'><%=h t['rb_txt'] %></pre>
+          <pre class='out_txt'><%=h t['out'] %></pre>
+          <br style='clear:both'>
+        <% end %>
       </div>
     </div>
   <% end %>
 
   <script type='text/javascript'>
     $(function(){
-      $('.test-title').each(function(){
+      $('.test-category').each(function(){
         var idx = $(this).data('idx');
         $(this).click(function() {
           $('.test-detail[data-idx='+idx+']').toggle();
