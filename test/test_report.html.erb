@@ -6,19 +6,23 @@
   <style>
     h2.test-category { text-decoration: underline; }
     h2.test-category:hover { cursor: pointer; }
-    pre.rb_txt, pre.out_txt {
+    pre.console {
       float: left;
-      width: 50%;
+      width: 33%;
       overflow-x: auto;
+      border: 1px dotted #eee;
     }
     div.test-detail { display: none; }
+    .segv { color: #ca0; }
+    .ok { color: green; }
+    .ng { color: #a00; }
   </style>
 </head>
 <body>
 
   <% $tests.each.with_index do |test, i| %>
     <div>
-      <h2 class='test-category' data-idx='<%=h i %>'>
+      <h2 class='test-category <%=h test['status'] %>' data-idx='<%=h i %>'>
         <%=h test['category'] %>
       </h2>
       <div class='test-detail' data-idx='<%=h i %>'>
@@ -26,8 +30,9 @@
           <% if t['title'] %>
             <h3><%=h t['title'] %></h3>
           <% end %>
-          <pre class='rb_txt'><%=h t['rb_txt'] %></pre>
-          <pre class='out_txt'><%=h t['out'] %></pre>
+          <pre class='console rb_txt'><%=h t['rb_txt'] %></pre>
+          <pre class='console out_txt'><%=h t['mrubyc_out'] %></pre>
+          <pre class='console cruby_txt'><%=h t['cruby_out'] %></pre>
           <br style='clear:both'>
         <% end %>
       </div>

@@ -14,6 +14,7 @@ class Conf
   end
 
   def mrbc; File.join(mruby_path, "bin/mrbc"); end
+  def mruby; File.join(mruby_path, "bin/mruby"); end
   def mrubyc; File.join(mrubyc_path, "sample_c/mrubyc"); end
 end
 
@@ -27,25 +28,42 @@ module Test
     sh "#{$conf.mrbc} -E -o #{mrb_path} #{f.path}"
   end
 
-  def self.run(rb_path, mrb_path, res_path)
+  def self.run(header_path, rb_path, mrb_path, res_path)
+    cruby_out = `cat #{header_path} #{rb_path} | ruby`
+    mruby_out = `#{$conf.mruby} -b #{mrb_path}` 
+    
+    if cruby_out != mruby_out
+      $stderr.puts "--- cruby #{rb_path}"
+      $stderr.puts cruby_out
+      $stderr.puts "--- mruby #{rb_path}"
+      $stderr.puts mruby_out
+      raise "cruby != mruby"
+    end
+
     cmd = "#{$conf.mrubyc} #{mrb_path} 2>&1"
     puts cmd
-    out = `#{cmd}`
-    if $?.exitstatus == 139
+    mrubyc_out = `#{cmd}`
+    segv = ($?.exitstatus == 139)
+    if segv
       if File.exist?("core")
-        out << `gdb -batch -c core -ex bt`
+        mrubyc_out << `gdb -batch -c core -ex bt`
       else
         puts "Detected SEGV but core file not found"
       end
     end
+    status = segv ? 'segv' : (mrubyc_out == cruby_out) ? 'ok' : 'ng'
     data = {
       rb_path: rb_path,
       category: File.basename(rb_path),
       cases: [
         {title: nil,
          rb_txt: File.read(rb_path),
-         out: out}
-      ]
+         cruby_out: cruby_out,
+         mruby_out: mruby_out,
+         mrubyc_out: mrubyc_out,
+         status: status}
+      ],
+      status: status,
     }
     File.write(res_path, data.to_json)
   end
@@ -74,7 +92,7 @@ BASIC_RBS.zip(BASIC_MRBS, BASIC_RESULTS).each do |rb_path, mrb_path, res_path|
   end
 
   file res_path => mrb_path do
-    Test.run(rb_path, mrb_path, res_path)
+    Test.run("test/basictest/header.rb", rb_path, mrb_path, res_path)
   end
 end
 
@@ -103,7 +121,7 @@ BOOTSTRAP_RBS.zip(BOOTSTRAP_MRBS, BOOTSTRAP_RESULTS).each do |rb_path, mrb_path,
   end
 
   file res_path => mrb_path do
-    Test.run(rb_path, mrb_path, res_path)
+    Test.run("test/bootstraptest/header.rb", rb_path, mrb_path, res_path)
   end
 end
 
