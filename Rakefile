@@ -29,8 +29,7 @@ module Test
     sh "#{$conf.mrbc} -E -o #{mrb_path} #{f.path}"
   end
 
-  def self.run(header_path, rb_path, mrb_path, res_path)
-    rm res_path if File.exist?(res_path)
+  def self.run_snippet(header_path, rb_path, mrb_path)
     cruby_out = `cat #{header_path} #{rb_path} | ruby`
     mruby_out = `#{$conf.mruby} -b #{mrb_path}` 
     
@@ -54,18 +53,26 @@ module Test
       end
     end
     status = segv ? 'segv' : (mrubyc_out == cruby_out) ? 'ok' : 'ng'
+
+    return {
+      title: nil,
+      rb_txt: File.read(rb_path),
+      cruby_out: cruby_out,
+      mruby_out: mruby_out,
+      mrubyc_out: mrubyc_out,
+      status: status,
+    }
+  end
+
+  def self.run(header_path, rb_path, mrb_path, res_path)
+    rm res_path if File.exist?(res_path)
+    result = run_snippet(header_path, rb_path, mrb_path)
+
     data = {
       rb_path: rb_path,
       category: File.basename(rb_path),
-      cases: [
-        {title: nil,
-         rb_txt: File.read(rb_path),
-         cruby_out: cruby_out,
-         mruby_out: mruby_out,
-         mrubyc_out: mrubyc_out,
-         status: status}
-      ],
-      status: status,
+      cases: [result],
+      status: result[:status],
     }
     File.write(res_path, data.to_json)
   end
