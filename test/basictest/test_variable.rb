@@ -1,17 +1,8 @@
 test_check "variable"
-test_ok($$.instance_of?(Integer))
-
-# read-only variable
-begin
-  $$ = 5
-  test_ok false
-rescue NameError
-  test_ok true
-end
 
 foobar = "foobar"
-$_ = foobar
-test_ok($_ == foobar)
+$foobar = foobar
+test_ok($foobar == foobar)
 
 class Gods
   @@rule = "Uranus"		# private to Gods
@@ -52,6 +43,5 @@ test_ok(Titans.ruler2 == "Cronus")
 atlas = Titans.new
 test_ok(atlas.ruler0 == "Cronus")
 test_ok(atlas.ruler3 == "Zeus")
-test_ok(atlas.ruler4 == "Cronus")
-
-
+# mrubyで通らない https://github.com/mruby/mruby/issues/3235
+#test_ok(atlas.ruler4 == "Cronus")

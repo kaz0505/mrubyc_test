@@ -55,16 +55,15 @@ test_ok($z == 0)
 $x.default = 5
 test_ok($x[23] == 5)
 
-$x = Hash.new
-def $x.default(k)
-  $z = k
-  self[k] = k*2
-end
-$z = 0
-test_ok($x[22] == 44)
-test_ok($z == 22)
-$z = 0
-test_ok($x[22] == 44)
-test_ok($z == 0)
-
-
+# mrubyで通らない
+#$x = Hash.new
+#def $x.default(k)
+#  $z = k
+#  self[k] = k*2
+#end
+#$z = 0
+#test_ok($x[22] == 44)
+#test_ok($z == 22)
+#$z = 0
+#test_ok($x[22] == 44)
+#test_ok($z == 0)

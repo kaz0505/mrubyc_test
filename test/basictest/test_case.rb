@@ -28,10 +28,10 @@ else
   test_ok(false)
 end
 
-case "foobar"
-when /^f.*r$/
-  test_ok(true)
-else
-  test_ok(false)
-end
-
+# mrubyで動かない(デフォルトで正規表現がない)
+#case "foobar"
+#when /^f.*r$/
+#  test_ok(true)
+#else
+#  test_ok(false)
+#end

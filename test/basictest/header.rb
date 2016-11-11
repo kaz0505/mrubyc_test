@@ -12,11 +12,7 @@ def test_ok(cond, n=1)
   if cond
     puts "ok " + $testnum.to_s
   else
-    puts "not ok " + $what + " " + $testnum.to_s
+    puts "not ok " + $what + " " + $testnum.to_s + " (n: " + n.to_s + ")"
     $failed += 1
   end
-end
-
-def test_nok(cond)
-  cond ? test_ok(false) : test_ok(true)
 end
