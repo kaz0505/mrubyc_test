@@ -22,6 +22,7 @@ module Test
   extend FileUtils
 
   def self.compile(header, rb_path, mrb_path)
+    rm mrb_path if File.exist?(mrb_path)
     f = Tempfile.new(File.basename(rb_path))
     f.write(header + File.read(rb_path))
     f.close
@@ -29,6 +30,7 @@ module Test
   end
 
   def self.run(header_path, rb_path, mrb_path, res_path)
+    rm res_path if File.exist?(res_path)
     cruby_out = `cat #{header_path} #{rb_path} | ruby`
     mruby_out = `#{$conf.mruby} -b #{mrb_path}` 
     
