@@ -69,6 +69,53 @@ module Test
     }
     File.write(res_path, data.to_json)
   end
+
+  def self.run_mrubytest(header_path, rb_path, res_path)
+    rm res_path if File.exist?(res_path)
+    cases = []
+    title = rb = nil
+    File.readlines(rb_path).each do |line|
+      case line
+      when /^assert\(['"](.+?)['"].+/
+        raise "missing end" if title 
+        title = $1
+      when /^end/
+        raise "missing start" unless title
+        cases << {title: title, rb_txt: rb, mrubyc_out: nil}
+        title = rb = nil
+      when /^\s*$/
+        # skip
+      when /^#/
+        # skip
+      else
+        raise "unknown line out of test: #{line.inspect} in #{rb_path}" unless title
+        rb ||= ""
+        rb << line
+      end
+    end
+
+    header = File.read(header_path)
+    cases.each do |t|
+      f1 = Tempfile.new(File.basename(rb_path))
+      f1.write(header + t[:rb_txt])
+      f1.close
+      f2 = Tempfile.new(File.basename(rb_path))
+      f2.close
+      system "#{$conf.mrbc} -E -o #{f2.path} #{f1.path}"
+      t[:mrubyc_out] = `#{$conf.mrubyc} #{f2.path} 2>&1`
+      if $?.exitstatus == 139
+        if File.exist?("core")
+          t[:mrubyc_out] << `gdb -batch -c core -ex bt`
+        else
+          puts "Detected SEGV but core file not found"
+        end
+      end
+    end
+
+    cat = File.basename(rb_path)
+    data = {rb_path: rb_path, category: cat, cases: cases}
+    File.write(res_path, data.to_json)
+  end
 end
 
 
@@ -147,7 +194,7 @@ MRUBY_REPORT = "report/mrubytest.html"
 
 MRUBY_RBS.zip(MRUBY_RESULTS).each do |rb_path, res_path|
   file res_path => rb_path do
-    sh "ruby test/mrubytest/runner.rb #{rb_path} #{$conf.mruby_path} #{$conf.mrubyc_path} > #{res_path}"
+    Test.run_mrubytest("test/mrubytest/header.rb", rb_path, res_path)
   end
 end
 
