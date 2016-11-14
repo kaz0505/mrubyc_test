@@ -37,14 +37,21 @@ module Test
     end
     mruby_out = `#{$conf.mruby} -b #{mrb_path}` 
 
-    if cruby_out != mruby_out
+    error = if cruby_out != mruby_out
+              "cruby_out != mruby_out"
+            elsif cruby_out =~ /^ng/
+              "cruby ng"
+            elsif mruby_out =~ /^ng/
+              "mruby ng"
+            end
+    if error
       $stderr.puts "--- cruby #{rb_path}"
       $stderr.puts cruby_out
       $stderr.puts "--- mruby #{rb_path}"
       $stderr.puts mruby_out
       $stderr.puts "--- snippet"
       $stderr.puts File.read(rb_path)
-      raise "cruby != mruby"
+      raise "#{error} (#{rb_path})" 
     end
     
     return [cruby_out, mruby_out]
