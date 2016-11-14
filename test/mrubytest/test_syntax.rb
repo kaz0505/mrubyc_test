@@ -4,7 +4,7 @@ assert('__FILE__') do
 end
 
 assert('__LINE__') do
-  assert_equal 7, __LINE__
+  assert_equal 1, __LINE__
 end
 
 assert('super', '11.3.4') do
