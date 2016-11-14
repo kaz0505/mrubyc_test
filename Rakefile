@@ -29,18 +29,28 @@ module Test
     sh "#{$conf.mrbc} -E -o #{mrb_path} #{f.path}"
   end
 
-  def self.run_snippet(header_path, rb_path, mrb_path)
-    cruby_out = `cat #{header_path} #{rb_path} | ruby`
+  def self.run_rubies(mrb_path, rb_path, header_path = nil)
+    if header_path
+      cruby_out = `cat #{header_path} #{rb_path} | ruby`
+    else
+      cruby_out = `ruby #{rb_path}`
+    end
     mruby_out = `#{$conf.mruby} -b #{mrb_path}` 
-    
+
     if cruby_out != mruby_out
       $stderr.puts "--- cruby #{rb_path}"
       $stderr.puts cruby_out
       $stderr.puts "--- mruby #{rb_path}"
       $stderr.puts mruby_out
+      $stderr.puts "--- snippet"
+      $stderr.puts File.read(rb_path)
       raise "cruby != mruby"
     end
+    
+    return [cruby_out, mruby_out]
+  end
 
+  def self.run_mrubyc(mrb_path, cruby_out)
     cmd = "#{$conf.mrubyc} #{mrb_path} 2>&1"
     puts cmd
     mrubyc_out = `#{cmd}`
@@ -55,10 +65,6 @@ module Test
     status = segv ? 'segv' : (mrubyc_out == cruby_out) ? 'ok' : 'ng'
 
     return {
-      title: nil,
-      rb_txt: File.read(rb_path),
-      cruby_out: cruby_out,
-      mruby_out: mruby_out,
       mrubyc_out: mrubyc_out,
       status: status,
     }
@@ -66,7 +72,13 @@ module Test
 
   def self.run(header_path, rb_path, mrb_path, res_path)
     rm res_path if File.exist?(res_path)
-    result = run_snippet(header_path, rb_path, mrb_path)
+
+    cruby_out, mruby_out = run_rubies(mrb_path, rb_path, header_path)
+    result = run_mrubyc(mrb_path, cruby_out)
+    result[:cruby_out] = cruby_out
+    result[:mruby_out] = mruby_out
+    result[:title] = nil
+    result[:rb_txt] = File.read(rb_path)
 
     data = {
       rb_path: rb_path,
@@ -88,7 +100,7 @@ module Test
         title = $1
       when /^end/
         raise "missing start" unless title
-        cases << {title: title, rb_txt: rb, mrubyc_out: nil}
+        cases << {title: title, rb_txt: rb}
         title = rb = nil
       when /^\s*$/
         # skip
@@ -106,17 +118,15 @@ module Test
       f1 = Tempfile.new(File.basename(rb_path))
       f1.write(header + t[:rb_txt])
       f1.close
-      f2 = Tempfile.new(File.basename(rb_path))
-      f2.close
-      system "#{$conf.mrbc} -E -o #{f2.path} #{f1.path}"
-      t[:mrubyc_out] = `#{$conf.mrubyc} #{f2.path} 2>&1`
-      if $?.exitstatus == 139
-        if File.exist?("core")
-          t[:mrubyc_out] << `gdb -batch -c core -ex bt`
-        else
-          puts "Detected SEGV but core file not found"
-        end
-      end
+      mrb_path = f1.path.sub(".rb", ".mrb")
+
+      sh "#{$conf.mrbc} -E -o #{mrb_path} #{f1.path}"
+
+      cruby_out, mruby_out = run_rubies(mrb_path, f1.path)
+      result = run_mrubyc(mrb_path, cruby_out)
+      t.merge!(result)
+      t[:cruby_out] = cruby_out
+      t[:mruby_out] = mruby_out
     end
 
     cat = File.basename(rb_path)
