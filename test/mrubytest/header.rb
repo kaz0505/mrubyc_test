@@ -27,3 +27,7 @@ def assert_true(given)
   end
 end
 def assert_false(given); assert_true(!given); end
+
+def assert_nil(arg)
+  assert_true(nil == arg)
+end
