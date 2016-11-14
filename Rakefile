@@ -129,8 +129,15 @@ module Test
       t[:mruby_out] = mruby_out
     end
 
-    cat = File.basename(rb_path)
-    data = {rb_path: rb_path, category: cat, cases: cases}
+    category = File.basename(rb_path)
+    status = if cases.any?{|t| t[:status] == 'segv'}
+               'segv'
+             elsif cases.any?{|t| t[:status] == 'ng'}
+               'ng'
+             else
+               'ok'
+             end
+    data = {rb_path: rb_path, category: category, cases: cases, status: status}
     File.write(res_path, data.to_json)
   end
 end
