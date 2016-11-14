@@ -1,32 +1,32 @@
 test_check "while/until";
 
 # test break
-tmp = ["tvi925", "tvi920", "vt100", "Amiga", "paper"]
-while line = tmp.shift
-  break if line == "vt100"
+i = 0
+while i < 10
+  break if i == 3
+  i += 1
 end
-
-test_ok(line == "vt100")
+test_ok(i == 3)
 
 # test next
 $bad = false
-tmp = ["tvi925", "tvi920", "vt100", "Amiga", "paper"]
-while line = tmp.shift
-  next if line == "vt100"
-  $bad = 1 if line =="vt100"
+i = 0
+while i < 10
+  i += 1
+  next if i == 3
+  $bad = 1 if i == 3
 end
-test_ok(!(line == "vt100" || $bad))
+test_ok(!$bad)
 
 # test redo
-sum=0
-for i in 1..10
+sum = 0
+i = 0
+while i < 3
   sum += i
-  i -= 1
-  if i > 0
-    redo
-  end
+  redo if sum == 1
+  i += 1
 end
-test_ok(sum == 220)
+test_ok(sum == 4)
 
 # test until
 i = 0
