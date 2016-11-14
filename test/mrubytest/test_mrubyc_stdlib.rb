@@ -178,12 +178,12 @@ assert('String#size', '15.2.10.5.33') do
   assert_equal 3, 'abc'.size
 end
 
-assert('String#size(UTF-8)', '15.2.10.5.33') do
-  str = 'こんにちは世界!'
-  assert_equal 8, str.size
-  assert_not_equal str.bytesize, str.size
-  assert_equal 2, str[1, 2].size
-end
+#assert('String#size(UTF-8)', '15.2.10.5.33') do
+#  str = 'こんにちは世界!'
+#  assert_equal 8, str.size
+#  assert_not_equal str.bytesize, str.size
+#  assert_equal 2, str[1, 2].size
+#end
 
 assert('String#length', '15.2.10.5.26') do
   assert_equal 3, 'abc'.length
