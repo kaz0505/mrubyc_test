@@ -28,7 +28,7 @@
       <div class='test-detail' data-idx='<%=h i %>'>
         <% test['cases'].each do |t| %>
           <% if t['title'] %>
-            <h3><%=h t['title'] %></h3>
+            <h3 class='<%=h t['status']%>'><%=h t['title'] %></h3>
           <% end %>
           <pre class='console rb_txt'><%=h t['rb_txt'] %></pre>
           <pre class='console out_txt'><%=h t['mrubyc_out'] %></pre>
