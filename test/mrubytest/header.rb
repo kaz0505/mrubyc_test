@@ -1,4 +1,4 @@
-$title = nil
+$title = ""
 def assert(title, section)
   $title = title
 end
