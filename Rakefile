@@ -29,7 +29,7 @@ module Test
     sh "#{$conf.mrbc} -E -o #{mrb_path} #{f.path}"
   end
 
-  def self.run_rubies(mrb_path, rb_path, header_path = nil)
+  def self.run_rubies(mrb_path, rb_path, header_path = nil, strict: true)
     if header_path
       cruby_out = `cat #{header_path} #{rb_path} | ruby`
     else
@@ -44,7 +44,7 @@ module Test
             elsif mruby_out =~ /^ng/
               "mruby ng"
             end
-    if error
+    if error && strict
       $stderr.puts "--- cruby #{rb_path}"
       $stderr.puts cruby_out
       $stderr.puts "--- mruby #{rb_path}"
@@ -77,10 +77,10 @@ module Test
     }
   end
 
-  def self.run(header_path, rb_path, mrb_path, res_path)
+  def self.run(header_path, rb_path, mrb_path, res_path, strict: true)
     rm res_path if File.exist?(res_path)
 
-    cruby_out, mruby_out = run_rubies(mrb_path, rb_path, header_path)
+    cruby_out, mruby_out = run_rubies(mrb_path, rb_path, header_path, strict: strict)
     result = run_mrubyc(mrb_path, cruby_out)
     result[:cruby_out] = cruby_out
     result[:mruby_out] = mruby_out
@@ -201,7 +201,7 @@ BOOTSTRAP_RBS.zip(BOOTSTRAP_MRBS, BOOTSTRAP_RESULTS).each do |rb_path, mrb_path,
   end
 
   file res_path => mrb_path do
-    Test.run("test/bootstraptest/header.rb", rb_path, mrb_path, res_path)
+    Test.run("test/bootstraptest/header.rb", rb_path, mrb_path, res_path, strict: false)
   end
 end
 
