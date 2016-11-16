@@ -1,11 +1,11 @@
-assert('__FILE__') do
-  file = __FILE__[-9, 9]
-  assert_equal 'syntax.rb', file
-end
-
-assert('__LINE__') do
-  assert_equal 1, __LINE__
-end
+#assert('__FILE__') do
+#  file = __FILE__[-9, 9]
+#  assert_equal 'syntax.rb', file
+#end
+#
+#assert('__LINE__') do
+#  assert_equal 1, __LINE__
+#end
 
 assert('super', '11.3.4') do
   assert_raise NoMethodError do
