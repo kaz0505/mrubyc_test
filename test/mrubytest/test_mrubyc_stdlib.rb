@@ -141,3 +141,12 @@ assert('String#to_i', '15.2.10.5.39') do
   assert_equal 4, d
   assert_equal 1_000, e
 end
+
+assert('Check the usage of a NUL character') do
+  "qqq\0ppp"
+end
+
+assert('Float#==', '15.2.9.3.7') do
+  assert_true 3.1 == 3.1
+  assert_false 3.1 == 3.2
+end
