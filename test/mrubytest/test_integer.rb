@@ -266,3 +266,11 @@ end
 #  assert_equal [1, 2, 3], a
 #  assert_equal [1, 3, 5], b
 #end
+
+assert('Numeric#+@', '15.2.7.4.1') do
+  assert_equal(+1, +1)
+end
+
+assert('Numeric#-@', '15.2.7.4.2') do
+  assert_equal(-1, -1)
+end
