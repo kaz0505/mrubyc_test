@@ -238,4 +238,4 @@ end
 desc "run mrubytest"
 task "mrubytest" => MRUBY_REPORT
 
-task default: ["basictest", "bootstraptest", "mrubytest"]
+task default: ["basictest", "mrubytest"]
