@@ -35,8 +35,9 @@ OSの設定でSEGV時のcoreファイル生成を有効にすると(以下は例
 個別に実行する場合は以下
 
     $ rake basictest
-    $ rake bootstraptest
     $ rake mrubytest
+
+実行結果がreport/index.htmlとして生成されます。
 
 ## テストについて
 
