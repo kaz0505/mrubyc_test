@@ -31,11 +31,11 @@ module Test
 
   def self.run_rubies(mrb_path, rb_path, header_path = nil, strict: true)
     if header_path
-      cruby_out = `cat #{header_path} #{rb_path} | ruby`
+      cruby_out = `cat #{header_path} #{rb_path} | ruby 2>&1`
     else
-      cruby_out = `ruby #{rb_path}`
+      cruby_out = `ruby #{rb_path} 2>&1`
     end
-    mruby_out = `#{$conf.mruby} -b #{mrb_path}` 
+    mruby_out = `#{$conf.mruby} -b #{mrb_path} 2>&1` 
 
     error = if cruby_out != mruby_out
               "cruby_out != mruby_out"
