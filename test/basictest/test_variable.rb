@@ -43,5 +43,4 @@ test_ok(Titans.ruler2 == "Cronus")
 atlas = Titans.new
 test_ok(atlas.ruler0 == "Cronus")
 test_ok(atlas.ruler3 == "Zeus")
-# mrubyで通らない https://github.com/mruby/mruby/issues/3235
-#test_ok(atlas.ruler4 == "Cronus")
+test_ok(atlas.ruler4 == "Cronus")
