@@ -22,10 +22,261 @@
 
   
     <div>
-      <h2 class='test-category segv' data-idx='0'>
-        test_literals.rb
+      <h2 class='test-category ok' data-idx='0'>
+        test_integer.rb
       </h2>
       <div class='test-detail' data-idx='0'>
+        
+          
+            <h3 class='ok'>Integer#+</h3>
+          
+          <pre class='console rb_txt'>  a = 1+1
+  assert_equal 2, a
+</pre>
+          <pre class='console out_txt'>ok
+</pre>
+          <pre class='console cruby_txt'>ok
+</pre>
+          <br style='clear:both'>
+        
+          
+            <h3 class='ok'>Integer#-</h3>
+          
+          <pre class='console rb_txt'>  a = 2-1
+  assert_equal 1, a
+</pre>
+          <pre class='console out_txt'>ok
+</pre>
+          <pre class='console cruby_txt'>ok
+</pre>
+          <br style='clear:both'>
+        
+          
+            <h3 class='ok'>Integer#*</h3>
+          
+          <pre class='console rb_txt'>  a = 1*1
+  assert_equal 1, a
+</pre>
+          <pre class='console out_txt'>ok
+</pre>
+          <pre class='console cruby_txt'>ok
+</pre>
+          <br style='clear:both'>
+        
+          
+            <h3 class='ok'>Integer#/</h3>
+          
+          <pre class='console rb_txt'>  a = 2/1
+  assert_equal 2, a
+</pre>
+          <pre class='console out_txt'>ok
+</pre>
+          <pre class='console cruby_txt'>ok
+</pre>
+          <br style='clear:both'>
+        
+          
+            <h3 class='ok'>Integer#%</h3>
+          
+          <pre class='console rb_txt'>  a = 1%1
+  c = 2%4
+  d = 2%5
+  e = 2%-5
+  f = -2%5
+  g = -2%-5
+  h =  2%-2
+  i = -2%2
+  j = -2%-2
+  assert_equal 0, a
+  assert_equal 2, c
+  assert_equal 2, d
+  assert_equal(-3, e)
+  assert_equal 3, f
+  assert_equal(-2, g)
+  assert_equal 0, h
+  assert_equal 0, i
+  assert_equal 0, j
+</pre>
+          <pre class='console out_txt'>ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+</pre>
+          <pre class='console cruby_txt'>ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+</pre>
+          <br style='clear:both'>
+        
+          
+            <h3 class='ok'>Integer#&lt;=&gt;</h3>
+          
+          <pre class='console rb_txt'>  a = 1&lt;=&gt;0
+  b = 1&lt;=&gt;1
+  c = 1&lt;=&gt;2
+  assert_equal  1, a
+  assert_equal  0, b
+  assert_equal(-1, c)
+</pre>
+          <pre class='console out_txt'>ok
+ok
+ok
+</pre>
+          <pre class='console cruby_txt'>ok
+ok
+ok
+</pre>
+          <br style='clear:both'>
+        
+          
+            <h3 class='ok'>Integer#==</h3>
+          
+          <pre class='console rb_txt'>  a = 1==0
+  b = 1==1
+  assert_false a
+  assert_true b
+</pre>
+          <pre class='console out_txt'>ok
+ok
+</pre>
+          <pre class='console cruby_txt'>ok
+ok
+</pre>
+          <br style='clear:both'>
+        
+          
+            <h3 class='ok'>Integer#~</h3>
+          
+          <pre class='console rb_txt'>  # Complement
+  assert_equal(-1, ~0)
+  assert_equal(-3, ~2)
+</pre>
+          <pre class='console out_txt'>ok
+ok
+</pre>
+          <pre class='console cruby_txt'>ok
+ok
+</pre>
+          <br style='clear:both'>
+        
+          
+            <h3 class='ok'>Integer#&amp;</h3>
+          
+          <pre class='console rb_txt'>  # Bitwise AND
+  #   0101 (5)
+  # &amp; 0011 (3)
+  # = 0001 (1)
+  assert_equal 1, 5 &amp; 3
+</pre>
+          <pre class='console out_txt'>ok
+</pre>
+          <pre class='console cruby_txt'>ok
+</pre>
+          <br style='clear:both'>
+        
+          
+            <h3 class='ok'>Integer#&lt;&lt;</h3>
+          
+          <pre class='console rb_txt'>  # Left Shift by one
+  #   00010111 (23)
+  # = 00101110 (46)
+  assert_equal 46, 23 &lt;&lt; 1
+  # Left Shift by a negative is Right Shift
+  assert_equal 23, 46 &lt;&lt; -1
+  # Left Shift by 31 is bitShift overflow to SignedInt
+  assert_equal 2147483648, 1 &lt;&lt; 31
+  # -3 Left Shift by 30 is bitShift overflow to SignedInt
+  assert_equal(-3221225472, -3 &lt;&lt; 30)
+</pre>
+          <pre class='console out_txt'>ok
+ok
+ok
+ok
+</pre>
+          <pre class='console cruby_txt'>ok
+ok
+ok
+ok
+</pre>
+          <br style='clear:both'>
+        
+          
+            <h3 class='ok'>Integer#&gt;&gt;</h3>
+          
+          <pre class='console rb_txt'>  # Right Shift by one
+  #   00101110 (46)
+  # = 00010111 (23)
+  assert_equal 23, 46 &gt;&gt; 1
+  # Right Shift by a negative is Left Shift
+  assert_equal 46, 23 &gt;&gt; -1
+  # Don&#39;t raise on large Right Shift
+  assert_equal 0, 23 &gt;&gt; 128
+</pre>
+          <pre class='console out_txt'>ok
+ok
+ok
+</pre>
+          <pre class='console cruby_txt'>ok
+ok
+ok
+</pre>
+          <br style='clear:both'>
+        
+          
+            <h3 class='ok'>Integer#to_s</h3>
+          
+          <pre class='console rb_txt'>  assert_equal &#39;1&#39;, 1.to_s
+  assert_equal(&quot;-1&quot;, -1.to_s)
+</pre>
+          <pre class='console out_txt'>ok
+ok
+</pre>
+          <pre class='console cruby_txt'>ok
+ok
+</pre>
+          <br style='clear:both'>
+        
+          
+            <h3 class='ok'>Numeric#+@</h3>
+          
+          <pre class='console rb_txt'>  assert_equal(+1, +1)
+</pre>
+          <pre class='console out_txt'>ok
+</pre>
+          <pre class='console cruby_txt'>ok
+</pre>
+          <br style='clear:both'>
+        
+          
+            <h3 class='ok'>Numeric#-@</h3>
+          
+          <pre class='console rb_txt'>  assert_equal(-1, -1)
+</pre>
+          <pre class='console out_txt'>ok
+</pre>
+          <pre class='console cruby_txt'>ok
+</pre>
+          <br style='clear:both'>
+        
+      </div>
+    </div>
+  
+    <div>
+      <h2 class='test-category segv' data-idx='1'>
+        test_literals.rb
+      </h2>
+      <div class='test-detail' data-idx='1'>
         
           
             <h3 class='ok'>Literals Numerical</h3>
@@ -638,257 +889,6 @@ ok
 ok
 ok
 ok
-</pre>
-          <br style='clear:both'>
-        
-      </div>
-    </div>
-  
-    <div>
-      <h2 class='test-category ok' data-idx='1'>
-        test_integer.rb
-      </h2>
-      <div class='test-detail' data-idx='1'>
-        
-          
-            <h3 class='ok'>Integer#+</h3>
-          
-          <pre class='console rb_txt'>  a = 1+1
-  assert_equal 2, a
-</pre>
-          <pre class='console out_txt'>ok
-</pre>
-          <pre class='console cruby_txt'>ok
-</pre>
-          <br style='clear:both'>
-        
-          
-            <h3 class='ok'>Integer#-</h3>
-          
-          <pre class='console rb_txt'>  a = 2-1
-  assert_equal 1, a
-</pre>
-          <pre class='console out_txt'>ok
-</pre>
-          <pre class='console cruby_txt'>ok
-</pre>
-          <br style='clear:both'>
-        
-          
-            <h3 class='ok'>Integer#*</h3>
-          
-          <pre class='console rb_txt'>  a = 1*1
-  assert_equal 1, a
-</pre>
-          <pre class='console out_txt'>ok
-</pre>
-          <pre class='console cruby_txt'>ok
-</pre>
-          <br style='clear:both'>
-        
-          
-            <h3 class='ok'>Integer#/</h3>
-          
-          <pre class='console rb_txt'>  a = 2/1
-  assert_equal 2, a
-</pre>
-          <pre class='console out_txt'>ok
-</pre>
-          <pre class='console cruby_txt'>ok
-</pre>
-          <br style='clear:both'>
-        
-          
-            <h3 class='ok'>Integer#%</h3>
-          
-          <pre class='console rb_txt'>  a = 1%1
-  c = 2%4
-  d = 2%5
-  e = 2%-5
-  f = -2%5
-  g = -2%-5
-  h =  2%-2
-  i = -2%2
-  j = -2%-2
-  assert_equal 0, a
-  assert_equal 2, c
-  assert_equal 2, d
-  assert_equal(-3, e)
-  assert_equal 3, f
-  assert_equal(-2, g)
-  assert_equal 0, h
-  assert_equal 0, i
-  assert_equal 0, j
-</pre>
-          <pre class='console out_txt'>ok
-ok
-ok
-ok
-ok
-ok
-ok
-ok
-ok
-</pre>
-          <pre class='console cruby_txt'>ok
-ok
-ok
-ok
-ok
-ok
-ok
-ok
-ok
-</pre>
-          <br style='clear:both'>
-        
-          
-            <h3 class='ok'>Integer#&lt;=&gt;</h3>
-          
-          <pre class='console rb_txt'>  a = 1&lt;=&gt;0
-  b = 1&lt;=&gt;1
-  c = 1&lt;=&gt;2
-  assert_equal  1, a
-  assert_equal  0, b
-  assert_equal(-1, c)
-</pre>
-          <pre class='console out_txt'>ok
-ok
-ok
-</pre>
-          <pre class='console cruby_txt'>ok
-ok
-ok
-</pre>
-          <br style='clear:both'>
-        
-          
-            <h3 class='ok'>Integer#==</h3>
-          
-          <pre class='console rb_txt'>  a = 1==0
-  b = 1==1
-  assert_false a
-  assert_true b
-</pre>
-          <pre class='console out_txt'>ok
-ok
-</pre>
-          <pre class='console cruby_txt'>ok
-ok
-</pre>
-          <br style='clear:both'>
-        
-          
-            <h3 class='ok'>Integer#~</h3>
-          
-          <pre class='console rb_txt'>  # Complement
-  assert_equal(-1, ~0)
-  assert_equal(-3, ~2)
-</pre>
-          <pre class='console out_txt'>ok
-ok
-</pre>
-          <pre class='console cruby_txt'>ok
-ok
-</pre>
-          <br style='clear:both'>
-        
-          
-            <h3 class='ok'>Integer#&amp;</h3>
-          
-          <pre class='console rb_txt'>  # Bitwise AND
-  #   0101 (5)
-  # &amp; 0011 (3)
-  # = 0001 (1)
-  assert_equal 1, 5 &amp; 3
-</pre>
-          <pre class='console out_txt'>ok
-</pre>
-          <pre class='console cruby_txt'>ok
-</pre>
-          <br style='clear:both'>
-        
-          
-            <h3 class='ok'>Integer#&lt;&lt;</h3>
-          
-          <pre class='console rb_txt'>  # Left Shift by one
-  #   00010111 (23)
-  # = 00101110 (46)
-  assert_equal 46, 23 &lt;&lt; 1
-  # Left Shift by a negative is Right Shift
-  assert_equal 23, 46 &lt;&lt; -1
-  # Left Shift by 31 is bitShift overflow to SignedInt
-  assert_equal 2147483648, 1 &lt;&lt; 31
-  # -3 Left Shift by 30 is bitShift overflow to SignedInt
-  assert_equal(-3221225472, -3 &lt;&lt; 30)
-</pre>
-          <pre class='console out_txt'>ok
-ok
-ok
-ok
-</pre>
-          <pre class='console cruby_txt'>ok
-ok
-ok
-ok
-</pre>
-          <br style='clear:both'>
-        
-          
-            <h3 class='ok'>Integer#&gt;&gt;</h3>
-          
-          <pre class='console rb_txt'>  # Right Shift by one
-  #   00101110 (46)
-  # = 00010111 (23)
-  assert_equal 23, 46 &gt;&gt; 1
-  # Right Shift by a negative is Left Shift
-  assert_equal 46, 23 &gt;&gt; -1
-  # Don&#39;t raise on large Right Shift
-  assert_equal 0, 23 &gt;&gt; 128
-</pre>
-          <pre class='console out_txt'>ok
-ok
-ok
-</pre>
-          <pre class='console cruby_txt'>ok
-ok
-ok
-</pre>
-          <br style='clear:both'>
-        
-          
-            <h3 class='ok'>Integer#to_s</h3>
-          
-          <pre class='console rb_txt'>  assert_equal &#39;1&#39;, 1.to_s
-  assert_equal(&quot;-1&quot;, -1.to_s)
-</pre>
-          <pre class='console out_txt'>ok
-ok
-</pre>
-          <pre class='console cruby_txt'>ok
-ok
-</pre>
-          <br style='clear:both'>
-        
-          
-            <h3 class='ok'>Numeric#+@</h3>
-          
-          <pre class='console rb_txt'>  assert_equal(+1, +1)
-</pre>
-          <pre class='console out_txt'>ok
-</pre>
-          <pre class='console cruby_txt'>ok
-</pre>
-          <br style='clear:both'>
-        
-          
-            <h3 class='ok'>Numeric#-@</h3>
-          
-          <pre class='console rb_txt'>  assert_equal(-1, -1)
-</pre>
-          <pre class='console out_txt'>ok
-</pre>
-          <pre class='console cruby_txt'>ok
 </pre>
           <br style='clear:both'>
         
