@@ -21,6 +21,7 @@ class Test
 end
 
 $tests = Dir["#{tests_dir}/test_*.rb"]
+  .sort
   .map{|x| Test.new(x.sub(/\.rb\z/, ".res"))}
 erb = ERB.new(File.read("#{__dir__}/test_report.html.erb"))
 puts erb.run(binding)
